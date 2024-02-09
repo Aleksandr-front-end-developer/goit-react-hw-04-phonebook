@@ -14,16 +14,14 @@ export const App = () => {
     { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
   ]);
   const [filter, setFilter] = useState('');
-  const firstUpdate = useRef(true);
 
   useEffect(() => {
-    if (firstUpdate.current) {
-      const contactsStorage = JSON.parse(localStorage.getItem('contacts'));
-      contactsStorage && setContacts(contactsStorage);
-      firstUpdate.current = false;
-    } else {
-      localStorage.setItem('contacts', JSON.stringify(contacts));
-    }
+    const contactsStorage = JSON.parse(localStorage.getItem('contacts'));
+    if (contactsStorage) setContacts(contactsStorage);
+  }, []);
+
+  useEffect(() => {
+    contacts && localStorage.setItem('contacts', JSON.stringify(contacts));
   }, [contacts]);
 
   const handleSubmit = data => {

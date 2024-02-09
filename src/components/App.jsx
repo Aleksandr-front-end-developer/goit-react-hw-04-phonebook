@@ -1,10 +1,11 @@
 import { nanoid } from 'nanoid';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 
 import { Contactsform } from './Contactsform/Contactsform';
-import { ContactsList } from './ContactsList/ContactsList';
 import { Filter } from './Filter/Filter';
 import './style.scss';
+
+const ContactsList = lazy(() => import('./ContactsList/ContactsList'));
 
 export const App = () => {
   const [contacts, setContacts] = useState([
@@ -51,10 +52,12 @@ export const App = () => {
       <Contactsform contacts={contacts} onSubmit={handleSubmit} />
       <h2>Contacts</h2>
       <Filter onFilter={handleFilter} value={filter} />
-      <ContactsList
-        contacts={filterContacts()}
-        onDelete={handleDeleteContact}
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <ContactsList
+          contacts={filterContacts()}
+          onDelete={handleDeleteContact}
+        />
+      </Suspense>
     </div>
   );
 };
